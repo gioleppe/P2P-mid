@@ -60,7 +60,9 @@ for node in addresses:
         ip4s.extend([match[0] for match in re.findall(pattern, ips)])
 
 ip4s = set(ip4s)
-ip4s.remove("127.0.0.1")
+# only remove if set is not empty
+if ip4s:
+    ip4s.remove("127.0.0.1")
 
 print(list(ip4s))
 
