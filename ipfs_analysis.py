@@ -3,11 +3,13 @@ import re
 import csv
 
 # endpoints
-base = "http://localhost:5001/api/v0/"
+base = "http://127.0.0.1:5001/api/v0/"
 get = base + "get"
 stat = base + "bitswap/stat"
 ledger = base + "bitswap/ledger"
 id = base + "id"
+
+print(requests.post(stat, params={"human": "true", "verbose": "true"}).json())
 
 print("-------")
 print("Getting file from ipfs")
@@ -22,7 +24,8 @@ partners = resp["Peers"]
 
 # query each partner's ledger
 peers = []
-for peer in partners:
+for count, peer in enumerate(partners):
+    print(count)
     req = requests.post(ledger, params={"arg": peer})
     peers.append(req.json())
 
