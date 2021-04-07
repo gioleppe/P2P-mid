@@ -66,9 +66,10 @@ def id_info(contributors):
             "http://127.0.0.1:5001/api/v0/id", params={"arg": peer["Peer"]}
         )
         resp = req.json()
-        addresses = extract_ip4s(resp["Addresses"])
+        addresses = extract_ip4s(resp["Addresses"]) if "Addresses" in resp else []
         peer["Addr"] = addresses
-        peer["Agent"] = resp["AgentVersion"]
+        agent = resp["AgentVersion"] if "AgentVersion" in resp else "Unknown"
+        peer["Agent"] = agent
 
         # try to geolocate the host
         for addr in addresses:
@@ -124,7 +125,7 @@ def print_infos(contributors, num_bytes):
     for count, contributor in enumerate(contributors):
         # print deadly table
         print(
-            f"{count : <10}{contributor['Peer'][:5]+'...' : ^10}{contributor['Country'] : ^20}{contributor['Agent'][:22]+'...' : ^25}{contributor['Latency'] :^15.3f}{contributor['Recv'] : ^10}{contributor['Recv']/num_bytes*100:>5.3f}"
+            f"{count : <10}{contributor['Peer'][:5]+'...' : ^10}{contributor['Country'] : ^20}{contributor['Agent'][:22]+'...' : ^25}{contributor['Latency'][:10] :^15}{contributor['Recv'] : ^10}{contributor['Recv']/num_bytes*100:>5.3f}"
         )
 
 
