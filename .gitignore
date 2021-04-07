@@ -3,3 +3,4 @@ ip4s.csv
 .vscode/settings.json
 downloads
 *.pyc
+*.csv
