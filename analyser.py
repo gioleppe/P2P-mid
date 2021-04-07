@@ -23,13 +23,14 @@ def get_cid():
     sleep(1)
     # poll the process in order to get the output
     count = 1
+
     while True:
         if process.poll() is not None:
             break
         print("--Updated Wantlist--")
         print(get_wantlist()["Keys"])
+        sleep(5)
         rc = process.poll()
-        sleep(3)
 
     print("Finished downloading CID " + args.c)
 
@@ -87,7 +88,9 @@ def extract_ip4(addresses):
     # convert to a set in order to avoid duplicate addresses for each host
     # then remove localhost
     ip4s = set(ips)
-    ip4s.remove("127.0.0.1")
+    if "127.0.0.1" in ip4s:
+        ip4s.remove("127.0.0.1")
+    print(ip4s)
     return list(ip4s)
 
 
@@ -129,9 +132,9 @@ if __name__ == "__main__":
     parser.add_argument("-c", help="The CID to be downloaded", required=True)
     parser.add_argument(
         "-p",
-        help="The relative path where the CID will be stored. If not set, defaults to ./downloads",
+        help="The relative path where the CID will be stored. If not set, defaults to ./downloads/",
         type=str,
-        default="./downloads",
+        default="./downloads/",
     )
     args = parser.parse_args()
 
