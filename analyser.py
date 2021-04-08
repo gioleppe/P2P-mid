@@ -123,7 +123,7 @@ def get_latencies(contributors):
             latency = latencies[contributor["Peer"]][:-2]
         else:
             # placeholder value
-            latency = "Nan"
+            latency = "NaN"
         contributor["Latency"] = latency
 
 
