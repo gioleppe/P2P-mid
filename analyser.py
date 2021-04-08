@@ -135,9 +135,21 @@ def main():
     peers = stats["Peers"]
     recv_blocks = stats["BlocksReceived"]
     recv_bytes = stats["DataReceived"]
+    dup_blocks = stats["DupBlksReceived"]
+    dup_bytes = stats["DupDataReceived"]
+    legit_blocks = recv_blocks - dup_blocks
+    legit_bytes = recv_bytes - dup_bytes
 
     print("\n--Bitswap stats regarding the transfer--")
     print(f"Received a total of {recv_blocks} blocks ({recv_bytes} bytes)")
+    print(
+        f"Duplicate blocks account for ({dup_blocks / recv_blocks * 100 :.2f}, % of the total"
+    )
+    print(
+        f"Duplicate bytes account for ({dup_bytes / recv_bytes * 100 :.2f}, % of the total"
+    )
+    print(f"Received {legit_blocks} non-duplicate blocks")
+    print(f"Received {legit_bytes} non-duplicate bytes")
     print(f"At the moment there are {len(peers)} peers in the swarm")
 
     # query each partner's bitswap ledger
@@ -160,12 +172,12 @@ def main():
     latencies = get_latencies(contributors)
 
     # print final infos on each contributor
-    print_infos(contributors, recv_bytes)
+    print_infos(contributors, legit_bytes)
 
     # logging enabled
     if args.l:
         print("You can find more logs in the current directory")
-        # write logs
+        # write logs about peers
         with open(
             str(args.c) + "_peers.csv", "w", encoding="utf8", newline=""
         ) as output_file:
@@ -175,6 +187,7 @@ def main():
             )
             fc.writeheader()
             fc.writerows(contributors)
+        # write logs about bitswap
 
 
 if __name__ == "__main__":
