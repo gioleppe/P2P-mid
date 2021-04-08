@@ -28,11 +28,22 @@ def get_cid():
         if process.poll() is not None:
             break
         print("--Updated Wantlist--")
-        print(get_wantlist()["Keys"])
+        wantlist = get_wantlist()["Keys"]
+        for el in wantlist:
+            # print size and CID for each block
+            blocks = [v for k, v in el.items()]
+            for block in blocks:
+                block_info(block)
         sleep(5)
         rc = process.poll()
 
     print("Finished downloading CID " + args.c)
+
+
+def block_info(block):
+    req = requests.post("http://127.0.0.1:5001/api/v0/block/stat?arg=" + block)
+    resp = req.json()
+    print(f"CID {resp['Key'] :^10} --- Size(Bytes) {resp['Size']:>5}")
 
 
 # used to periodically poll the wantlist
@@ -114,18 +125,20 @@ def get_latencies(contributors):
         contributor["Latency"] = latency
 
 
-def print_infos(contributors):
+def print_infos(contributors, tot_bytes):
     print("\n--Recap on each Peer's contribution--")
     print("----")
 
     # print header
     print(
-        f"{'Peer' : <10}{'PeerID' : ^10}{'Country' : ^20}{'Agent' : ^25}{'Latency(ms)' : ^15}{'RecvBytes' : ^10}{'Blocks' : >5}"
+        f"{'Peer' : <10}{'PeerID' : ^10}{'Country' : ^20}{'Agent' : ^25}{'Latency(ms)' : ^15}{'RecvBytes' : ^10}{'Byte%' : ^10}{'Blocks' : >5}"
     )
     for count, contributor in enumerate(contributors):
+        # total byte contribution percentage
+        percentage = contributor["Recv"] / tot_bytes * 100
         # print deadly table
         print(
-            f"{count : <10}{contributor['Peer'][:5]+'...' : ^10}{contributor['Country'] : ^20}{contributor['Agent'][:22]+'...' : ^25}{contributor['Latency'][:10] :^15}{contributor['Recv'] : ^10}{contributor['Exchanged']:>5}"
+            f"{count : <10}{contributor['Peer'][:5]+'...' : ^10}{contributor['Country'] : ^20}{contributor['Agent'][:22]+'...' : ^25}{contributor['Latency'][:10] :^15}{contributor['Recv'] : ^10}{percentage :^10.3f}{contributor['Exchanged']:>5}"
         )
 
 
@@ -172,7 +185,7 @@ def main():
     latencies = get_latencies(contributors)
 
     # print final infos on each contributor
-    print_infos(contributors, legit_bytes)
+    print_infos(contributors, recv_bytes)
 
     # logging enabled
     if args.l:
