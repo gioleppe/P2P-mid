@@ -114,18 +114,18 @@ def get_latencies(contributors):
         contributor["Latency"] = latency
 
 
-def print_infos(contributors, num_bytes):
+def print_infos(contributors):
     print("\n--Recap on each Peer's contribution--")
     print("----")
 
     # print header
     print(
-        f"{'Peer' : <10}{'PeerID' : ^10}{'Country' : ^20}{'Agent' : ^25}{'Latency(ms)' : ^15}{'RecvBytes' : ^10}{'Contrib%' : >5}"
+        f"{'Peer' : <10}{'PeerID' : ^10}{'Country' : ^20}{'Agent' : ^25}{'Latency(ms)' : ^15}{'RecvBytes' : ^10}{'Blocks' : >5}"
     )
     for count, contributor in enumerate(contributors):
         # print deadly table
         print(
-            f"{count : <10}{contributor['Peer'][:5]+'...' : ^10}{contributor['Country'] : ^20}{contributor['Agent'][:22]+'...' : ^25}{contributor['Latency'][:10] :^15}{contributor['Recv'] : ^10}{contributor['Recv']/num_bytes*100:>5.3f}"
+            f"{count : <10}{contributor['Peer'][:5]+'...' : ^10}{contributor['Country'] : ^20}{contributor['Agent'][:22]+'...' : ^25}{contributor['Latency'][:10] :^15}{contributor['Recv'] : ^10}{contributor['Exchanged']:>5}"
         )
 
 
