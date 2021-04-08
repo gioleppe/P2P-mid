@@ -25,7 +25,8 @@ def get_cid():
     # poll the process in order to get the output
 
     while True:
-        if process.poll() is not None:
+        rc = process.poll()
+        if rc is not None:
             break
         print("--Updated Wantlist--")
         wantlist = get_wantlist()["Keys"]
@@ -34,19 +35,20 @@ def get_cid():
             blocks = [v for k, v in el.items()]
             for block in blocks:
                 block_info(block)
+        #  print the wantlist every 5 seconds
         sleep(5)
-        rc = process.poll()
 
     print("Finished downloading CID " + args.c)
 
 
+# get some info on the blocks currently on wantlist
 def block_info(block):
     req = requests.post("http://127.0.0.1:5001/api/v0/block/stat?arg=" + block)
     resp = req.json()
     print(f"CID {resp['Key'] :^10} --- Size(Bytes) {resp['Size']:>5}")
 
 
-# used to periodically poll the wantlist
+# used to poll the wantlist
 def get_wantlist():
     req = requests.post("http://127.0.0.1:5001/api/v0/bitswap/wantlist")
     return req.json()
@@ -146,13 +148,14 @@ def main():
     get_cid()
     stats = bitswap_stat()
     peers = stats["Peers"]
+
+    # get and print some useful stats
     recv_blocks = stats["BlocksReceived"]
     recv_bytes = stats["DataReceived"]
     dup_blocks = stats["DupBlksReceived"]
     dup_bytes = stats["DupDataReceived"]
     legit_blocks = recv_blocks - dup_blocks
     legit_bytes = recv_bytes - dup_bytes
-
     print("\n--Bitswap stats regarding the transfer--")
     print(f"Received a total of {recv_blocks} blocks ({recv_bytes} bytes)")
     print(
