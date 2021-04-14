@@ -159,10 +159,10 @@ def main():
     print("\n--Bitswap stats regarding the transfer--")
     print(f"Received a total of {recv_blocks} blocks ({recv_bytes} bytes)")
     print(
-        f"Duplicate blocks account for ({dup_blocks / recv_blocks * 100 :.2f}, % of the total"
+        f"Duplicate blocks account for ({dup_blocks / recv_blocks * 100 :.2f}% of the total)"
     )
     print(
-        f"Duplicate bytes account for ({dup_bytes / recv_bytes * 100 :.2f}, % of the total"
+        f"Duplicate bytes account for ({dup_bytes / recv_bytes * 100 :.2f}% of the total)"
     )
     print(f"Received {legit_blocks} non-duplicate blocks")
     print(f"Received {legit_bytes} non-duplicate bytes")
