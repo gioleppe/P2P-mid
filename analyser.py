@@ -7,6 +7,7 @@ import subprocess
 from time import sleep
 import re
 import csv
+from pathlib import Path
 
 # uses the CLI interface in order to download a CID to the given path
 def get_cid():
@@ -224,5 +225,9 @@ if __name__ == "__main__":
         action="store_true",
     )
     args = parser.parse_args()
+
+    # create dir if absent
+    if args.p:
+        Path(args.p).mkdir(parents=True, exist_ok=True)
 
     main()
