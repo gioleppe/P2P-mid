@@ -3,6 +3,7 @@
 - requests library
 
 `pip install requests` should be enough.
+You could also run `pip install -r requirements.txt`, but that would be longer to type :)
 
 The tool has been tested on macOS 10.15 running Python 3.7.4 and on Ubuntu 20.04 LTS running Python 3.8.5.
 
